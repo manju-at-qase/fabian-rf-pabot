@@ -1,0 +1,37 @@
+name: qase
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up dependency and test folders
+      run: |
+        mkdir -p ./dependencies ./tests
+        # Copy dependency file and test suite folder content here
+        # Example: echo "your-dependency-content" > ./dependencies/pip-requirements.txt
+        # Example: cp -r path/to/your/tests ./tests
+
+    - name: Run Robot Framework Tests
+      env:
+        BROWSER: chrome
+        QASE_MODE: testops
+        QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+        QASE_TESTOPS_PROJECT: QD
+      run: |
+        docker run \
+          -v $(pwd)/requirements.txt:/opt/robotframework/pip-requirements.txt:Z \
+          -v $(pwd)/tests:/opt/robotframework/tests:Z \
+          -e BROWSER=$BROWSER \
+          -e QASE_MODE=$QASE_MODE \
+          -e QASE_TESTOPS_API_TOKEN=$QASE_TESTOPS_API_TOKEN \
+          -e QASE_TESTOPS_PROJECT=$QASE_TESTOPS_PROJECT \
+          ppodgorsek/robot-framework:latest
