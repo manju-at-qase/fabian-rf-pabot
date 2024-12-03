@@ -13,12 +13,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up dependency and test folders
-      run: |
-        mkdir -p ./dependencies ./tests
-        # Copy dependency file and test suite folder content here
-        # Example: echo "your-dependency-content" > ./dependencies/pip-requirements.txt
-        # Example: cp -r path/to/your/tests ./tests
+    steps:
+      - name: Create a Qase test run
+        uses: qase-tms/gh-actions/run-create
+        id: qase-run-create
+        with:
+          token: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+          project: QD
+          title: Robot Framework Pabot
+          description: |
+            Test Run Description
+            Use multiline text and [markdown formatting](https://example.com)
+
 
     - name: Run Robot Framework Tests
       env:
@@ -26,12 +32,15 @@ jobs:
         QASE_MODE: testops
         QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
         QASE_TESTOPS_PROJECT: QD
+        QASE_TESTOPS_RUN_ID: ${{ steps.qase-run-create.outputs.id }}
       run: |
         docker run \
           -v $(pwd)/requirements.txt:/opt/robotframework/pip-requirements.txt:Z \
           -v $(pwd)/tests:/opt/robotframework/tests:Z \
+          -e ROBOT_THREADS=4 \
           -e BROWSER=$BROWSER \
           -e QASE_MODE=$QASE_MODE \
           -e QASE_TESTOPS_API_TOKEN=$QASE_TESTOPS_API_TOKEN \
           -e QASE_TESTOPS_PROJECT=$QASE_TESTOPS_PROJECT \
+          -e QASE_TESTOPS_RUN_ID=$QASE_TESTOPS_RUN_ID \
           ppodgorsek/robot-framework:latest
