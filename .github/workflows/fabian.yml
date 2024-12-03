@@ -13,16 +13,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-      - name: Create a Qase test run
-        uses: qase-tms/gh-actions/run-create
-        id: qase-run-create
-        with:
-          token: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
-          project: QD
-          title: Robot Framework Pabot
-          description: |
-            Test Run Description
-            Use multiline text and [markdown formatting](https://example.com)
+    - name: Create a Qase test run
+      uses: qase-tms/gh-actions/run-create
+      id: qase-run-create
+      with:
+        token: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+        project: QD
+        title: Robot Framework Pabot
+        description: |
+          Test Run Description
+          Use multiline text and [markdown formatting](https://example.com)
 
 
     - name: Run Robot Framework Tests
