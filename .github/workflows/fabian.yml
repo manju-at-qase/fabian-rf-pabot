@@ -35,7 +35,7 @@ jobs:
       run: |
         docker run \
           -v $(pwd)/requirements.txt:/opt/robotframework/pip-requirements.txt:Z \
-          -v $(pwd)/tests:/opt/robotframework/tests:Z \
+          -v $(pwd)/test:/opt/robotframework/tests:Z \
           -e ROBOT_THREADS=4 \
           -e BROWSER=$BROWSER \
           -e QASE_MODE=$QASE_MODE \
