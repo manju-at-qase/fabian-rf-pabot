@@ -13,7 +13,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    steps:
       - name: Create a Qase test run
         uses: qase-tms/gh-actions/run-create
         id: qase-run-create
