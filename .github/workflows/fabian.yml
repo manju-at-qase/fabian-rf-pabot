@@ -3,7 +3,7 @@ name: qase
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   run-tests:

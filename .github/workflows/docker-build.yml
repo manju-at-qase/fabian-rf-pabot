@@ -5,8 +5,8 @@ on:
     # Publish `master` as Docker `latest` image.
     # Release branches will trigger the creation of a git tag if the build is successful
     branches:
-      - master
-      - release/*
+#      - master
+#      - release/*
 
   # Run tests for any PRs.
   pull_request:
