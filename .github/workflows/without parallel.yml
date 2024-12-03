@@ -1,4 +1,4 @@
-name: single worker
+name: single thread
 
 on:
   push:
@@ -37,7 +37,6 @@ jobs:
           -v $(pwd)/requirements.txt:/opt/robotframework/pip-requirements.txt:Z \
           -v $(pwd)/test:/opt/robotframework/tests:Z \
           -e ROBOT_OPTIONS="--listener qase.robotframework.Listener" \
-#          -e ROBOT_THREADS=4 \
           -e BROWSER=$BROWSER \
           -e QASE_MODE=$QASE_MODE \
           -e QASE_TESTOPS_API_TOKEN=$QASE_TESTOPS_API_TOKEN \
