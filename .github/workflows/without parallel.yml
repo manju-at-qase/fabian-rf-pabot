@@ -1,0 +1,46 @@
+name: single worker
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Create a Qase test run
+      uses: qase-tms/gh-actions/run-create@main
+      id: qase-run-create
+      with:
+        token: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+        project: QD
+        title: Robot Framework Pabot
+        description: |
+          Test Run Description
+          Use multiline text and [markdown formatting](https://example.com)
+
+
+    - name: Run Robot Framework Tests
+      env:
+        BROWSER: chrome
+        QASE_MODE: testops
+        QASE_TESTOPS_API_TOKEN: ${{ secrets.QASE_TESTOPS_API_TOKEN }}
+        QASE_TESTOPS_PROJECT: QD
+        QASE_TESTOPS_RUN_ID: ${{ steps.qase-run-create.outputs.id }}
+      run: |
+        docker run \
+          -v $(pwd)/requirements.txt:/opt/robotframework/pip-requirements.txt:Z \
+          -v $(pwd)/test:/opt/robotframework/tests:Z \
+          -e ROBOT_OPTIONS="--listener qase.robotframework.Listener" \
+#          -e ROBOT_THREADS=4 \
+          -e BROWSER=$BROWSER \
+          -e QASE_MODE=$QASE_MODE \
+          -e QASE_TESTOPS_API_TOKEN=$QASE_TESTOPS_API_TOKEN \
+          -e QASE_TESTOPS_PROJECT=$QASE_TESTOPS_PROJECT \
+          -e QASE_TESTOPS_RUN_ID=$QASE_TESTOPS_RUN_ID \
+          ppodgorsek/robot-framework:latest
